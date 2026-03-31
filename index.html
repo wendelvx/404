@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>WENDELVX | Full Stack Architect</title>
+    
+    <meta name="description" content="Portfólio interativo de WendelVX. Desenvolvedor Full Stack especializado em experiências imersivas, performance e arquiteturas escaláveis." />
+    <meta name="keywords" content="Full Stack, Desenvolvedor, React, Node.js, Three.js, Portfolio" />
+    <meta name="author" content="WendelVX" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
+
+    <style>
+      /* Preloader básico para evitar o "flash branco" antes do React carregar */
+      body {
+        margin: 0;
+        background-color: #09090b; /* Cor zinc-950 do Tailwind */
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+      }
+      
+      /* Garante que o scroll suave do Lenis não tenha saltos visuais na barra de rolagem */
+      html {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      html::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

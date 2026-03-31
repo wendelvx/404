@@ -1,0 +1,34 @@
+/* Importação única e moderna do Tailwind v4 */
+@import "tailwindcss";
+
+/* Configuração do tema (substitui o tailwind.config.js) */
+@theme {
+  --animate-shine: shine 5s linear infinite;
+}
+
+/* Keyframes soltos no CSS, o Tailwind v4 mapeia automaticamente */
+@keyframes shine {
+  0% {
+    background-position: 100%;
+  }
+  100% {
+    background-position: -100%;
+  }
+}
+
+/* Nossas regras base para a experiência cinematográfica */
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Evita o "bounce" no scroll nativo */
+    overscroll-behavior: none; 
+    /* Oculta as barras de rolagem */
+    scrollbar-width: none; 
+  }
+
+  body::-webkit-scrollbar {
+    display: none;
+  }
+}
