@@ -34,12 +34,11 @@ const TerminalNative = () => {
       } else {
         clearInterval(interval);
       }
-    }, 500); // Rápido e dinâmico
+    }, 500); 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    // Visual Hacker autêntico: Verde brilhante, espaçamento curto e sombra de luz
     <div className="font-mono text-xs md:text-sm p-6 space-y-2 text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] tracking-wide">
       {logs.map((line, i) => (
         <p key={i} className={i === logs.length - 1 ? "animate-pulse text-white drop-shadow-[0_0_8px_rgba(255,255,255,1)]" : "opacity-90"}>
@@ -75,7 +74,7 @@ function App() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothTouch: false, // Desabilitado no mobile para evitar quebrar o scroll nativo
+      smoothTouch: false, 
     });
 
     function raf(time) {
@@ -95,8 +94,7 @@ function App() {
   };
 
   return (
-    // overflow-x-hidden forte para garantir que NADA passe do limite horizontal do celular
-    <main className="relative w-full max-w-[100vw] bg-zinc-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
+    <main className="relative w-full bg-zinc-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
       
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
@@ -114,7 +112,6 @@ function App() {
         {/* --- SEÇÃO 01: HERO --- */}
         <section className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center p-6 gap-12 lg:gap-32 max-w-7xl mx-auto">
           
-          {/* Alinhamento forçado à esquerda no Desktop e centro no Mobile */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0 z-10 w-full lg:w-auto flex-shrink-0">
             <div className="w-full flex justify-center lg:justify-start">
               <FuzzyText baseIntensity={0.2} hoverIntensity={0.5} enableHover={isDesktop} color="#fff" fontSize="clamp(3rem, 10vw, 8rem)" fontWeight={900} className="uppercase leading-none">
@@ -132,9 +129,8 @@ function App() {
             </div>
           </div>
 
-          {/* O ESCUDO MOBILE: A div 'block lg:hidden' intercepta o toque e devolve o scroll ao celular */}
           <div className="z-20 relative w-full max-w-[350px] lg:max-w-none flex justify-center" translate="no">
-             {/* Escudo de Scroll Mobile */}
+            {/* ESCUDO MOBILE: Bloqueia o toque da imagem 3D e permite rolar a página */}
             {!isDesktop && <div className="absolute inset-0 z-50 touch-pan-y" style={{ touchAction: 'pan-y' }} />}
             
             <div className="scale-[0.85] md:scale-100 pointer-events-auto">
@@ -188,10 +184,28 @@ function App() {
                 <OrbitImages images={orbitTechLogos} shape="ellipse" radiusX={220} radiusY={90} rotation={-15} duration={30} itemSize={60} responsive={true} baseWidth={500} fill={true} showPath={true} pathColor="rgba(0, 255, 209, 0.2)" />
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-6 p-6 bg-zinc-900/50 rounded-3xl border border-white/5 backdrop-blur-md">
-                {orbitTechLogos.map((logo, i) => (
-                  <img key={i} src={logo} className="w-12 h-12 grayscale opacity-70" alt="tech" translate="no" />
-                ))}
+              /* ÓRBITA 100% CSS NATIVA PARA MOBILE */
+              <div className="relative w-72 h-72 flex items-center justify-center">
+                <div className="absolute inset-0 border border-cyan-500/20 rounded-full pointer-events-none" />
+                <div className="absolute w-16 h-16 bg-cyan-500/20 border border-cyan-400 rounded-full shadow-[0_0_30px_rgba(0,255,209,0.5)] animate-pulse" />
+                
+                <div className="absolute inset-0 animate-[spin_20s_linear_infinite]">
+                  {orbitTechLogos.map((logo, i) => {
+                    const angle = (i * 360) / orbitTechLogos.length;
+                    return (
+                      <div key={i} className="absolute inset-0" style={{ transform: `rotate(${angle}deg)` }}>
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-zinc-900 rounded-full p-2 border border-white/10 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden">
+                          <img 
+                            src={logo} 
+                            // Counter-rotation to keep the image straight
+                            className="w-full h-full object-contain grayscale opacity-80 animate-[spin_20s_linear_infinite_reverse]" 
+                            alt="tech" translate="no" 
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -206,17 +220,18 @@ function App() {
             </div>
           </div>
 
-          {/* AJUSTE CARD SWAP MOBILE: Distâncias zeradas/mínimas para não quebrar a tela pra direita */}
-          <div className="w-full max-w-[100vw] md:max-w-[600px] h-[450px] relative px-4 flex justify-center">
+          <div className="w-full max-w-[100vw] md:max-w-[600px] h-[400px] md:h-[450px] relative px-4 flex justify-center">
             <CardSwap 
-              cardDistance={isDesktop ? 40 : 5} 
-              verticalDistance={isDesktop ? 50 : 20} 
+              /* CORREÇÃO DO VAZAMENTO: O cardDistance horizontal agora é 0 no mobile! Eles descem, mas não vão para a direita */
+              cardDistance={isDesktop ? 40 : 0} 
+              verticalDistance={isDesktop ? 50 : 25} 
               delay={5000} 
               pauseOnHover={true}
             >
               {techCases.map((item) => (
                 <Card key={item.id}>
-                  <div className="w-[85vw] md:w-full max-w-[600px] h-full bg-zinc-900 border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden group mx-auto">
+                  {/* Tamanho fixo de w-[300px] no mobile garante que a caixa caiba em qualquer tela */}
+                  <div className="w-[300px] sm:w-[350px] md:w-full md:max-w-[600px] h-full bg-zinc-900 border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden group mx-auto">
                     {isDesktop && <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"><PixelTrail color={item.color} gridSize={30} /></div>}
                     <div className="z-10 flex flex-col items-center gap-4 md:gap-6">
                       <div className="flex gap-2 flex-wrap justify-center">
@@ -255,7 +270,6 @@ function App() {
                </div>
                <div className="w-full h-full pt-10 overflow-hidden bg-transparent relative">
                   <TerminalNative />
-                  {/* Efeito Retro Scanline */}
                   <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-50" />
                </div>
             </div>
