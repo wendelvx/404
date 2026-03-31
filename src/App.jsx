@@ -13,7 +13,7 @@ import PixelTrail from './components/PixelTrail';
 import GradientText from './components/GradientText';
 import CardSwap, { Card } from './components/CardSwap';
 
-// --- COMPONENTE TERMINAL NATIVO (Leve e Performático) ---
+// --- COMPONENTE TERMINAL NATIVO ---
 const TerminalNative = () => {
   const [logs, setLogs] = useState([]);
   const lines = [
@@ -73,6 +73,7 @@ function App() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothTouch: false,
+      touchMultiplier: 1.5,
     });
 
     function raf(time) {
@@ -87,13 +88,12 @@ function App() {
     };
   }, []);
 
-  // Função para abrir o WhatsApp
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/5588988145310', '_blank');
   };
 
   return (
-    <main className="relative w-full bg-zinc-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
+    <main className="relative w-full bg-zinc-950 text-white overflow-x-hidden selection:bg-purple-500/30">
       
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
@@ -108,15 +108,14 @@ function App() {
 
       <div className="relative z-10 w-full flex flex-col items-center">
         
-        {/* --- SEÇÃO 01: HERO (Alinhamento Corrigido) --- */}
+        {/* --- SEÇÃO 01: HERO --- */}
         <section className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center p-6 gap-12 lg:gap-24">
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0 z-10">
             <FuzzyText baseIntensity={0.2} hoverIntensity={0.5} enableHover={isDesktop} color="#fff" fontSize="clamp(3rem, 10vw, 8rem)" fontWeight={900} className="uppercase leading-none">
               WENDELVX
             </FuzzyText>
             
-            {/* Div com largura total do nome para garantir alinhamento perfeito do subtítulo */}
-            <div className="mt-2 w-full" translate="no">
+            <div className="mt-2 w-full flex justify-center lg:justify-start" translate="no">
               <DecryptedText
                 text="FULL STACK ARCHITECT" 
                 animateOn="view" sequential speed={50}
@@ -126,7 +125,8 @@ function App() {
             </div>
           </div>
 
-          <div className="z-20 scale-90 md:scale-100" translate="no">
+          {/* Container do Profile Card com correção de toque para Mobile */}
+          <div className="z-20 scale-90 md:scale-100 touch-pan-y" translate="no">
             <ProfileCard
               name="WendelVX"
               title="Full Stack Engineer"
@@ -147,9 +147,8 @@ function App() {
         </section>
 
         {/* --- SEÇÃO 02: MANIFESTO --- */}
-        <section className="w-full min-h-[70vh] flex items-center justify-center px-6 py-24 bg-zinc-950/40 backdrop-blur-sm border-y border-white/5">
+        <section className="w-full min-h-[60vh] flex items-center justify-center px-6 py-24 bg-zinc-950/40 backdrop-blur-sm border-y border-white/5">
           <div className="max-w-4xl z-10 text-center flex flex-col items-center gap-8">
-             <span className="text-purple-400 tracking-[0.2em] uppercase text-xs font-bold border border-purple-500/30 px-4 py-2 rounded-full bg-black/50" translate="no">/* Manifesto */</span>
              <div className="text-4xl md:text-6xl font-black" translate="no">
                <TrueFocus sentence="Experience the Extraordinary" manualMode={false} blurAmount={4} borderColor="#00ffd1" animationDuration={0.8} />
              </div>
@@ -162,9 +161,12 @@ function App() {
         {/* --- SEÇÃO 03: TECH STACK --- */}
         <section className="w-full min-h-[90vh] flex flex-col lg:flex-row items-center justify-center py-24 px-6 gap-16 max-w-7xl mx-auto overflow-hidden">
           <div className="flex-1 flex flex-col items-start gap-6 z-10 text-left">
-            <span className="text-cyan-400 tracking-[0.2em] uppercase text-xs font-bold border border-cyan-400/30 px-3 py-1 rounded-full bg-black/50" translate="no">/* Habilidades */</span>
-            <h3 className="text-5xl md:text-6xl font-black tracking-tight leading-none uppercase">O Ecossistema<br/><span className="text-purple-500 italic">Técnico</span></h3>
-            <p className="text-zinc-400 text-lg max-w-md leading-relaxed">As ferramentas gravitam ao redor do problema. Domino tecnologias modernas para garantir harmonia entre performance e escalabilidade.</p>
+            <h3 className="text-5xl md:text-6xl font-black tracking-tight leading-none uppercase">
+              O Ecossistema<br/><span className="text-purple-500 italic">Técnico</span>
+            </h3>
+            <p className="text-zinc-400 text-lg max-w-md leading-relaxed">
+              As ferramentas gravitam ao redor do problema. Domino tecnologias modernas para garantir harmonia entre performance e escalabilidade.
+            </p>
           </div>
 
           <div className="flex-1 w-full flex items-center justify-center relative min-h-[400px] z-10">
@@ -186,17 +188,20 @@ function App() {
         {/* --- SEÇÃO 04: CASOS DE USO --- */}
         <section className="w-full pt-16 pb-24 px-6 mb-20 bg-zinc-950/60 backdrop-blur-md border-t border-white/5 flex flex-col items-center">
           <div className="max-w-6xl w-full mb-12">
-            <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-              <div>
-                <span className="text-pink-500 tracking-[0.2em] uppercase text-xs font-bold border border-pink-500/30 px-3 py-1 rounded-full mb-4 inline-block" translate="no">/* Expertise */</span>
-                <h3 className="text-4xl md:text-5xl font-bold tracking-tight uppercase italic" translate="no">Casos de Uso</h3>
-              </div>
-              <p className="text-zinc-500 max-w-sm text-right hidden md:block">Foco na arquitetura e resolução de problemas complexos.</p>
+            <div className="flex flex-col md:flex-row justify-between items-end gap-6 text-center md:text-left">
+              <h3 className="text-4xl md:text-5xl font-bold tracking-tight uppercase italic w-full md:w-auto" translate="no">Casos De Uso</h3>
+              <p className="text-zinc-500 max-w-sm hidden md:block">Foco na arquitetura e resolução de problemas complexos.</p>
             </div>
           </div>
 
-          <div className="w-full max-w-[600px] h-[450px] relative px-4">
-            <CardSwap cardDistance={40} verticalDistance={50} delay={5000} pauseOnHover={true}>
+          {/* Ajuste de cardDistance para não vazar no mobile */}
+          <div className="w-full max-w-[600px] h-[450px] relative">
+            <CardSwap 
+              cardDistance={isDesktop ? 40 : 20} 
+              verticalDistance={isDesktop ? 50 : 30} 
+              delay={5000} 
+              pauseOnHover={true}
+            >
               {techCases.map((item) => (
                 <Card key={item.id}>
                   <div className="w-full h-full bg-zinc-900 border border-white/10 rounded-[2.5rem] p-8 md:p-12 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden group">
@@ -215,12 +220,12 @@ function App() {
           </div>
         </section>
 
-        {/* --- SEÇÃO 05: CTA & TERMINAL (Sem Background Preto, 100% Transparente) --- */}
+        {/* --- SEÇÃO 05: CTA & TERMINAL (Sem fundo preto, totalmente transparente) --- */}
         <section className="w-full py-24 flex items-center justify-center relative overflow-hidden bg-transparent border-t border-purple-500/10">
           
-          <div className="max-w-7xl w-full z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 p-8 md:p-16 mx-6 border border-white/5 rounded-[3rem] backdrop-blur-sm">
-            <div className="flex flex-col items-start gap-8" translate="no">
-               <GradientText colors={["#00ffd1", "#8a5cff", "#ff5c7a"]} className="text-5xl md:text-7xl font-black">Vamos Construir</GradientText>
+          <div className="max-w-7xl w-full z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 p-8 md:p-16 mx-6 border border-white/5 rounded-[3rem]">
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-8" translate="no">
+               <GradientText colors={["#00ffd1", "#8a5cff", "#ff5c7a"]} className="text-5xl md:text-7xl font-black uppercase">Vamos Construir</GradientText>
                <button 
                 onClick={handleWhatsAppClick}
                 className="px-12 py-5 bg-white text-black font-black uppercase tracking-widest rounded-full hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
