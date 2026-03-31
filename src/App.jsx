@@ -13,16 +13,16 @@ import PixelTrail from './components/PixelTrail';
 import GradientText from './components/GradientText';
 import CardSwap, { Card } from './components/CardSwap';
 
-// --- COMPONENTE TERMINAL NATIVO (Hacker Edition) ---
+// --- COMPONENTE TERMINAL NATIVO ---
 const TerminalNative = () => {
   const [logs, setLogs] = useState([]);
   const lines = [
-    "[ OK ] Booting wendelvxOS kernel_v8.2...",
-    "[ OK ] Bypassing security protocols...",
-    "[INFO] Initializing neural network...",
-    "[ OK ] Decrypting architectural assets...",
-    "[INFO] Arsenal loaded successfully.",
-    "root@wendelvx:~$ access granted_"
+    "> inicializando_kernel_v8.2...",
+    "> estabelecendo_conexao_segura...",
+    "> descriptografando_protocolos_ark...",
+    "> carregando_arsenal_tecnico...",
+    "> status: sistema_online",
+    "> wendelvx@root:~$ _"
   ];
 
   useEffect(() => {
@@ -34,17 +34,14 @@ const TerminalNative = () => {
       } else {
         clearInterval(interval);
       }
-    }, 500); // Ligeiramente mais rápido para dar aquele feeling hacker
+    }, 600);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    // Cores vibrantes com drop-shadow para criar um "glow" autêntico de terminal antigo
-    <div className="font-mono text-xs md:text-sm p-6 space-y-2 text-[#00ffd1] drop-shadow-[0_0_8px_rgba(0,255,209,0.8)] tracking-wide">
+    <div className="font-mono text-xs md:text-sm p-6 space-y-2 text-cyan-500/80">
       {logs.map((line, i) => (
-        <p key={i} className={i === logs.length - 1 ? "animate-pulse text-white drop-shadow-[0_0_8px_rgba(255,255,255,1)]" : "opacity-80"}>
-          {line}
-        </p>
+        <p key={i} className={i === logs.length - 1 ? "animate-pulse" : ""}>{line}</p>
       ))}
     </div>
   );
@@ -96,7 +93,7 @@ function App() {
   };
 
   return (
-    <main className="relative w-full bg-zinc-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
+    <main className="relative w-full bg-zinc-950 text-white overflow-x-hidden selection:bg-purple-500/30">
       
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
@@ -113,9 +110,8 @@ function App() {
         
         {/* --- SEÇÃO 01: HERO --- */}
         <section className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center p-6 gap-12 lg:gap-24">
-          {/* ALINHAMENTO CORRIGIDO: w-full e max-w com text-left garantem o bloco travado à esquerda no desktop */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0 z-10 w-full lg:w-auto">
-            <FuzzyText baseIntensity={0.2} hoverIntensity={0.5} enableHover={isDesktop} color="#fff" fontSize="clamp(3rem, 10vw, 8rem)" fontWeight={900} className="uppercase leading-none w-full">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0 z-10">
+            <FuzzyText baseIntensity={0.2} hoverIntensity={0.5} enableHover={isDesktop} color="#fff" fontSize="clamp(3rem, 10vw, 8rem)" fontWeight={900} className="uppercase leading-none">
               WENDELVX
             </FuzzyText>
             
@@ -129,8 +125,8 @@ function App() {
             </div>
           </div>
 
-          {/* TOUCH SCROLL CORRIGIDO: scale-75 no mobile deixa as bordas livres para rolar com o dedo */}
-          <div className="z-20 scale-[0.80] md:scale-100 touch-pan-y" style={{ touchAction: 'pan-y' }} translate="no">
+          {/* Container do Profile Card com correção de toque para Mobile */}
+          <div className="z-20 scale-90 md:scale-100 touch-pan-y" translate="no">
             <ProfileCard
               name="WendelVX"
               title="Full Stack Engineer"
@@ -164,11 +160,11 @@ function App() {
 
         {/* --- SEÇÃO 03: TECH STACK --- */}
         <section className="w-full min-h-[90vh] flex flex-col lg:flex-row items-center justify-center py-24 px-6 gap-16 max-w-7xl mx-auto overflow-hidden">
-          <div className="flex-1 flex flex-col items-start gap-6 z-10 text-center lg:text-left w-full">
-            <h3 className="text-5xl md:text-6xl font-black tracking-tight leading-none uppercase w-full">
+          <div className="flex-1 flex flex-col items-start gap-6 z-10 text-left">
+            <h3 className="text-5xl md:text-6xl font-black tracking-tight leading-none uppercase">
               O Ecossistema<br/><span className="text-purple-500 italic">Técnico</span>
             </h3>
-            <p className="text-zinc-400 text-lg max-w-md leading-relaxed mx-auto lg:mx-0">
+            <p className="text-zinc-400 text-lg max-w-md leading-relaxed">
               As ferramentas gravitam ao redor do problema. Domino tecnologias modernas para garantir harmonia entre performance e escalabilidade.
             </p>
           </div>
@@ -198,12 +194,11 @@ function App() {
             </div>
           </div>
 
-          {/* VAZAMENTO MOBILE CORRIGIDO: w-[90vw] evita que as cartas saiam da tela */}
-          <div className="w-[90vw] md:w-full max-w-[600px] h-[450px] relative">
-            {/* cardDistance e verticalDistance bem curtos no celular */}
+          {/* Ajuste de cardDistance para não vazar no mobile */}
+          <div className="w-full max-w-[600px] h-[450px] relative">
             <CardSwap 
-              cardDistance={isDesktop ? 40 : 15} 
-              verticalDistance={isDesktop ? 50 : 25} 
+              cardDistance={isDesktop ? 40 : 20} 
+              verticalDistance={isDesktop ? 50 : 30} 
               delay={5000} 
               pauseOnHover={true}
             >
@@ -225,10 +220,10 @@ function App() {
           </div>
         </section>
 
-        {/* --- SEÇÃO 05: CTA & TERMINAL --- */}
+        {/* --- SEÇÃO 05: CTA & TERMINAL (Sem fundo preto, totalmente transparente) --- */}
         <section className="w-full py-24 flex items-center justify-center relative overflow-hidden bg-transparent border-t border-purple-500/10">
+          
           <div className="max-w-7xl w-full z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 p-8 md:p-16 mx-6 border border-white/5 rounded-[3rem]">
-            
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-8" translate="no">
                <GradientText colors={["#00ffd1", "#8a5cff", "#ff5c7a"]} className="text-5xl md:text-7xl font-black uppercase">Vamos Construir</GradientText>
                <button 
@@ -239,20 +234,18 @@ function App() {
                </button>
             </div>
 
-            <div className="h-[300px] relative rounded-2xl overflow-hidden border border-cyan-500/20 bg-zinc-950/80 backdrop-blur-md w-full shadow-[0_0_50px_rgba(0,255,209,0.05)]">
+            <div className="h-[300px] relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-950/40 backdrop-blur-md w-full shadow-inner">
                <div className="absolute top-0 left-0 w-full h-10 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  <span className="ml-4 text-[10px] font-mono text-zinc-400 tracking-tighter">root@wendelvx:~# terminal_seguro</span>
+                  <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                  <span className="ml-4 text-[10px] font-mono text-zinc-500 tracking-tighter">root@wendelvx:~# init_connection</span>
                </div>
-               <div className="w-full h-full pt-10 overflow-hidden bg-transparent relative">
+               <div className="w-full h-full pt-10 overflow-hidden bg-transparent">
                   <TerminalNative />
-                  {/* Efeito Retro Scanline */}
-                  <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-50" />
+                  <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.02),rgba(0,255,0,0.01),rgba(0,0,255,0.02))] bg-[length:100%_4px,3px_100%]" />
                </div>
             </div>
-            
           </div>
         </section>
 
