@@ -99,12 +99,9 @@ function App() {
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
       
+      {/* BACKGROUND MANTIDO PARA TODAS AS TELAS (O Elegante ColorBends) */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-80">
-        {isDesktop ? (
-          <ColorBends colors={["#ff5c7a", "#8a5cff", "#00ffd1"]} rotation={0} speed={0.2} scale={1} frequency={1} warpStrength={1} mouseInfluence={1} parallax={0.5} noise={0.1} transparent={true} />
-        ) : (
-          <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,#18181b_0%,#09090b_100%)]" />
-        )}
+        <ColorBends colors={["#ff5c7a", "#8a5cff", "#00ffd1"]} rotation={0} speed={0.2} scale={1} frequency={1} warpStrength={1} mouseInfluence={1} parallax={0.5} noise={0.1} transparent={true} />
       </div>
 
       <div className="relative z-10 w-full flex flex-col items-center">
@@ -131,7 +128,7 @@ function App() {
 
           <div className="z-20 relative w-full flex justify-center" translate="no">
             {isDesktop ? (
-              /* Componente 3D para Desktop */
+              /* COMPONENTE 3D ORIGINAL PARA DESKTOP */
               <div className="scale-100">
                 <ProfileCard
                   name="WendelVX"
@@ -151,13 +148,16 @@ function App() {
                 />
               </div>
             ) : (
-              /* COMPONENTE MOBILE NATIVO: Zero sequestro de toque, navegação suave */
-              <div className="relative w-full max-w-[320px] h-[400px] rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-6 group cursor-pointer" onClick={() => window.open('https://github.com/wendelvx', '_blank')}>
-                {/* Imagem de Fundo (Cobre o cartão inteiro) */}
-                <img src="/profile.webp" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Wendel" />
+              /* CLONE CSS NATIVO PARA MOBILE: Visual idêntico, mas não bloqueia o scroll do dedo! */
+              <div 
+                className="relative w-full max-w-[320px] h-[400px] rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-6 group cursor-pointer" 
+                onClick={() => window.open('https://github.com/wendelvx', '_blank')}
+              >
+                {/* Imagem de Fundo cobrindo tudo */}
+                <img src="/profile.webp" className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Wendel" />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
                 
-                {/* Conteúdo */}
+                {/* Conteúdo do Card */}
                 <div className="relative z-10 flex flex-col items-start gap-2">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400 mb-2 shadow-[0_0_15px_rgba(0,255,209,0.5)]">
                     <img src="/profile.webp" className="w-full h-full object-cover" alt="Avatar" />
@@ -169,7 +169,6 @@ function App() {
                   <h2 className="text-3xl font-bold text-white">WendelVX</h2>
                   <p className="text-cyan-400 font-mono text-sm">Full Stack Engineer</p>
                   
-                  {/* Botão */}
                   <div className="mt-4 w-full text-center py-3 bg-white/10 backdrop-blur-md rounded-xl font-bold text-white uppercase text-xs tracking-widest border border-white/10 active:bg-white/20 transition-colors">
                     Ver GitHub
                   </div>
@@ -209,7 +208,7 @@ function App() {
                 <OrbitImages images={orbitTechLogos} shape="ellipse" radiusX={220} radiusY={90} rotation={-15} duration={30} itemSize={60} responsive={true} baseWidth={500} fill={true} showPath={true} pathColor="rgba(0, 255, 209, 0.2)" />
               </div>
             ) : (
-              /* ÓRBITA 100% CSS NATIVA PARA MOBILE */
+              /* ÓRBITA CSS NATIVA MOBILE: Resolve a "tela morta" com uma animação de giro CSS super leve */
               <div className="relative w-72 h-72 flex items-center justify-center">
                 <div className="absolute inset-0 border border-cyan-500/20 rounded-full pointer-events-none" />
                 <div className="absolute w-16 h-16 bg-cyan-500/20 border border-cyan-400 rounded-full shadow-[0_0_30px_rgba(0,255,209,0.5)] animate-pulse" />
@@ -232,7 +231,7 @@ function App() {
         </section>
 
         {/* --- SEÇÃO 04: CASOS DE USO --- */}
-        <section className="w-full pt-16 pb-24 px-0 md:px-6 mb-20 bg-zinc-950/60 backdrop-blur-md border-t border-white/5 flex flex-col items-center">
+        <section className="w-full pt-16 pb-24 px-0 md:px-6 mb-20 bg-zinc-950/60 backdrop-blur-md border-t border-white/5 flex flex-col items-center overflow-hidden">
           <div className="max-w-6xl w-full mb-12 px-6">
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 text-center md:text-left">
               <h3 className="text-4xl md:text-5xl font-bold tracking-tight uppercase italic w-full md:w-auto" translate="no">Casos De Uso</h3>
@@ -242,7 +241,7 @@ function App() {
 
           <div className="w-full flex justify-center">
             {isDesktop ? (
-              /* CARD SWAP NO DESKTOP: Lindo e interativo */
+              /* CARD SWAP NO DESKTOP: Mantido original */
               <div className="w-full max-w-[600px] h-[450px] relative px-4">
                 <CardSwap cardDistance={40} verticalDistance={50} delay={5000} pauseOnHover={true}>
                   {techCases.map((item) => (
@@ -262,10 +261,10 @@ function App() {
                 </CardSwap>
               </div>
             ) : (
-              /* SLIDER HORIZONTAL NATIVO NO MOBILE: Perfeito, não vaza tela, 100% liso */
-              <div className="flex w-full overflow-x-auto snap-x snap-mandatory px-6 gap-4 pb-8" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+              /* SLIDER HORIZONTAL NATIVO MOBILE: Resolve o problema do overflow para a direita */
+              <div className="flex w-full overflow-x-auto snap-x snap-mandatory px-6 gap-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
                 {techCases.map((item) => (
-                  <div key={item.id} className="snap-center shrink-0 w-[85vw] max-w-[350px] bg-zinc-900 border border-white/10 rounded-[2rem] p-8 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden">
+                  <div key={item.id} className="snap-center shrink-0 w-[85vw] max-w-[320px] bg-zinc-900 border border-white/10 rounded-[2rem] p-8 flex flex-col justify-center items-center text-center shadow-xl relative overflow-hidden">
                     <div className="z-10 flex flex-col items-center gap-4">
                       <div className="flex gap-2 flex-wrap justify-center">
                         {item.tags.map(tag => (<span key={tag} className="text-[10px] font-mono text-zinc-500 border border-zinc-800 bg-black/30 px-2 py-1 rounded" translate="no">{tag}</span>))}
