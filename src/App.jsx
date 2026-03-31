@@ -94,7 +94,7 @@ function App() {
   };
 
   return (
-    <main className="relative w-full bg-zinc-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
+    <main className="relative w-full max-w-[100vw] bg-zinc-950 text-white overflow-x-hidden selection:bg-cyan-500/30">
       
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
@@ -129,28 +129,53 @@ function App() {
             </div>
           </div>
 
-          <div className="z-20 relative w-full max-w-[350px] lg:max-w-none flex justify-center" translate="no">
-            {/* ESCUDO MOBILE: Bloqueia o toque da imagem 3D e permite rolar a página */}
-            {!isDesktop && <div className="absolute inset-0 z-50 touch-pan-y" style={{ touchAction: 'pan-y' }} />}
-            
-            <div className="scale-[0.85] md:scale-100 pointer-events-auto">
-              <ProfileCard
-                name="WendelVX"
-                title="Full Stack Engineer"
-                handle="@wendelvx"
-                status="Online"
-                contactText="Ver GitHub"
-                image="/profile.webp" 
-                avatarUrl="/profile.webp"
-                showUserInfo={true}
-                enableTilt={isDesktop}
-                enableMobileTilt={false}
-                onContactClick={() => window.open('https://github.com/wendelvx', '_blank')}
-                behindGlowColor="rgba(0, 255, 209, 0.4)"
-                behindGlowEnabled={isDesktop}
-                innerGradient="linear-gradient(145deg, rgba(138, 92, 255, 0.2) 0%, rgba(0, 255, 209, 0.1) 100%)"
-              />
-            </div>
+          <div className="z-20 relative w-full flex justify-center" translate="no">
+            {isDesktop ? (
+              /* Componente 3D para Desktop */
+              <div className="scale-100">
+                <ProfileCard
+                  name="WendelVX"
+                  title="Full Stack Engineer"
+                  handle="@wendelvx"
+                  status="Online"
+                  contactText="Ver GitHub"
+                  image="/profile.webp" 
+                  avatarUrl="/profile.webp"
+                  showUserInfo={true}
+                  enableTilt={true}
+                  enableMobileTilt={false}
+                  onContactClick={() => window.open('https://github.com/wendelvx', '_blank')}
+                  behindGlowColor="rgba(0, 255, 209, 0.4)"
+                  behindGlowEnabled={true}
+                  innerGradient="linear-gradient(145deg, rgba(138, 92, 255, 0.2) 0%, rgba(0, 255, 209, 0.1) 100%)"
+                />
+              </div>
+            ) : (
+              /* COMPONENTE MOBILE NATIVO: Zero sequestro de toque, navegação suave */
+              <div className="relative w-full max-w-[320px] h-[400px] rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-6 group cursor-pointer" onClick={() => window.open('https://github.com/wendelvx', '_blank')}>
+                {/* Imagem de Fundo (Cobre o cartão inteiro) */}
+                <img src="/profile.webp" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Wendel" />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
+                
+                {/* Conteúdo */}
+                <div className="relative z-10 flex flex-col items-start gap-2">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400 mb-2 shadow-[0_0_15px_rgba(0,255,209,0.5)]">
+                    <img src="/profile.webp" className="w-full h-full object-cover" alt="Avatar" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs font-mono text-green-400 uppercase tracking-widest">Online</span>
+                  </div>
+                  <h2 className="text-3xl font-bold text-white">WendelVX</h2>
+                  <p className="text-cyan-400 font-mono text-sm">Full Stack Engineer</p>
+                  
+                  {/* Botão */}
+                  <div className="mt-4 w-full text-center py-3 bg-white/10 backdrop-blur-md rounded-xl font-bold text-white uppercase text-xs tracking-widest border border-white/10 active:bg-white/20 transition-colors">
+                    Ver GitHub
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 
@@ -195,12 +220,7 @@ function App() {
                     return (
                       <div key={i} className="absolute inset-0" style={{ transform: `rotate(${angle}deg)` }}>
                         <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-zinc-900 rounded-full p-2 border border-white/10 flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] overflow-hidden">
-                          <img 
-                            src={logo} 
-                            // Counter-rotation to keep the image straight
-                            className="w-full h-full object-contain grayscale opacity-80 animate-[spin_20s_linear_infinite_reverse]" 
-                            alt="tech" translate="no" 
-                          />
+                          <img src={logo} className="w-full h-full object-contain grayscale opacity-80 animate-[spin_20s_linear_infinite_reverse]" alt="tech" translate="no" />
                         </div>
                       </div>
                     );
@@ -212,7 +232,7 @@ function App() {
         </section>
 
         {/* --- SEÇÃO 04: CASOS DE USO --- */}
-        <section className="w-full pt-16 pb-24 px-0 md:px-6 mb-20 bg-zinc-950/60 backdrop-blur-md border-t border-white/5 flex flex-col items-center overflow-x-hidden">
+        <section className="w-full pt-16 pb-24 px-0 md:px-6 mb-20 bg-zinc-950/60 backdrop-blur-md border-t border-white/5 flex flex-col items-center">
           <div className="max-w-6xl w-full mb-12 px-6">
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 text-center md:text-left">
               <h3 className="text-4xl md:text-5xl font-bold tracking-tight uppercase italic w-full md:w-auto" translate="no">Casos De Uso</h3>
@@ -220,30 +240,43 @@ function App() {
             </div>
           </div>
 
-          <div className="w-full max-w-[100vw] md:max-w-[600px] h-[400px] md:h-[450px] relative px-4 flex justify-center">
-            <CardSwap 
-              /* CORREÇÃO DO VAZAMENTO: O cardDistance horizontal agora é 0 no mobile! Eles descem, mas não vão para a direita */
-              cardDistance={isDesktop ? 40 : 0} 
-              verticalDistance={isDesktop ? 50 : 25} 
-              delay={5000} 
-              pauseOnHover={true}
-            >
-              {techCases.map((item) => (
-                <Card key={item.id}>
-                  {/* Tamanho fixo de w-[300px] no mobile garante que a caixa caiba em qualquer tela */}
-                  <div className="w-[300px] sm:w-[350px] md:w-full md:max-w-[600px] h-full bg-zinc-900 border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden group mx-auto">
-                    {isDesktop && <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"><PixelTrail color={item.color} gridSize={30} /></div>}
-                    <div className="z-10 flex flex-col items-center gap-4 md:gap-6">
-                      <div className="flex gap-2 flex-wrap justify-center">
-                        {item.tags.map(tag => (<span key={tag} className="text-[10px] md:text-xs font-mono text-zinc-500 border border-zinc-800 bg-black/30 px-2 py-1 rounded" translate="no">{tag}</span>))}
+          <div className="w-full flex justify-center">
+            {isDesktop ? (
+              /* CARD SWAP NO DESKTOP: Lindo e interativo */
+              <div className="w-full max-w-[600px] h-[450px] relative px-4">
+                <CardSwap cardDistance={40} verticalDistance={50} delay={5000} pauseOnHover={true}>
+                  {techCases.map((item) => (
+                    <Card key={item.id}>
+                      <div className="w-full h-full bg-zinc-900 border border-white/10 rounded-[2.5rem] p-12 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden group mx-auto">
+                        <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500"><PixelTrail color={item.color} gridSize={30} /></div>
+                        <div className="z-10 flex flex-col items-center gap-6">
+                          <div className="flex gap-2 flex-wrap justify-center">
+                            {item.tags.map(tag => (<span key={tag} className="text-xs font-mono text-zinc-500 border border-zinc-800 bg-black/30 px-2 py-1 rounded" translate="no">{tag}</span>))}
+                          </div>
+                          <h4 className="text-4xl font-black text-white uppercase leading-tight" translate="no">{item.title}</h4>
+                          <p className="text-zinc-400 text-lg leading-relaxed max-w-md">{item.desc}</p>
+                        </div>
                       </div>
-                      <h4 className="text-2xl md:text-4xl font-black text-white uppercase leading-tight" translate="no">{item.title}</h4>
-                      <p className="text-zinc-400 text-sm md:text-lg leading-relaxed max-w-md">{item.desc}</p>
+                    </Card>
+                  ))}
+                </CardSwap>
+              </div>
+            ) : (
+              /* SLIDER HORIZONTAL NATIVO NO MOBILE: Perfeito, não vaza tela, 100% liso */
+              <div className="flex w-full overflow-x-auto snap-x snap-mandatory px-6 gap-4 pb-8" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+                {techCases.map((item) => (
+                  <div key={item.id} className="snap-center shrink-0 w-[85vw] max-w-[350px] bg-zinc-900 border border-white/10 rounded-[2rem] p-8 flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden">
+                    <div className="z-10 flex flex-col items-center gap-4">
+                      <div className="flex gap-2 flex-wrap justify-center">
+                        {item.tags.map(tag => (<span key={tag} className="text-[10px] font-mono text-zinc-500 border border-zinc-800 bg-black/30 px-2 py-1 rounded" translate="no">{tag}</span>))}
+                      </div>
+                      <h4 className="text-2xl font-black text-white uppercase leading-tight" translate="no">{item.title}</h4>
+                      <p className="text-zinc-400 text-sm leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
-                </Card>
-              ))}
-            </CardSwap>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
