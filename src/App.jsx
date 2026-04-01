@@ -149,7 +149,7 @@ function App() {
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
       
-      {/* BACKGROUND MANTIDO PARA TODAS AS TELAS */}
+      {/* BACKGROUND MANTIDO EXATAMENTE IGUAL AO ORIGINAL */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-80">
         <ColorBends colors={["#ff5c7a", "#8a5cff", "#00ffd1"]} rotation={0} speed={0.2} scale={1} frequency={1} warpStrength={1} mouseInfluence={1} parallax={0.5} noise={0.1} transparent={true} />
       </div>
@@ -179,7 +179,8 @@ function App() {
           <div className="flex-1 z-20 relative w-full flex justify-center lg:justify-end" translate="no">
             {!isDesktop && <div className="absolute inset-0 z-50 touch-pan-y" style={{ touchAction: 'pan-y' }} />}
             
-            <div className="scale-[0.85] md:scale-100 pointer-events-auto">
+            {/* REMOVIDO: "scale-[0.85] md:scale-100" que espremia o card. Trocado por "w-full flex justify-center lg:justify-end" */}
+            <div className="w-full flex justify-center lg:justify-end pointer-events-auto">
               {isDesktop ? (
                 <ProfileCard
                   name="WendelVX"
@@ -199,24 +200,25 @@ function App() {
                 />
               ) : (
                 <div 
-                  className="relative w-full max-w-[320px] h-[400px] rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-6 group cursor-pointer" 
+                  /* AUMENTADO: w-[90vw] max-w-[380px] e h-[480px] para ocupar melhor a tela e p-8 para dar respiro interno */
+                  className="relative w-[90vw] max-w-[380px] h-[480px] rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-8 group cursor-pointer" 
                   onClick={() => window.open('https://github.com/wendelvx', '_blank')}
                 >
                   <img src="/profile.webp" className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Wendel" />
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
                   
-                  <div className="relative z-10 flex flex-col items-start gap-2">
-                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400 mb-2 shadow-[0_0_15px_rgba(0,255,209,0.5)]">
+                  <div className="relative z-10 flex flex-col items-start gap-3">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-cyan-400 mb-2 shadow-[0_0_15px_rgba(0,255,209,0.5)]">
                       <img src="/profile-pixel.webp" className="w-full h-full object-cover" alt="Avatar Pixel" />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-xs font-mono text-green-400 uppercase tracking-widest">Online</span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-xs font-mono text-green-400 uppercase tracking-widest font-bold">Online</span>
                     </div>
-                    <h2 className="text-3xl font-bold text-white">WendelVX</h2>
+                    <h2 className="text-4xl font-bold text-white tracking-tight">WendelVX</h2>
                     <p className="text-cyan-400 font-mono text-sm">Full Stack Engineer</p>
                     
-                    <div className="mt-4 w-full text-center py-3 bg-white/10 backdrop-blur-md rounded-xl font-bold text-white uppercase text-xs tracking-widest border border-white/10 active:bg-white/20 transition-colors">
+                    <div className="mt-5 w-full text-center py-4 bg-white/10 backdrop-blur-md rounded-xl font-bold text-white uppercase text-sm tracking-widest border border-white/10 active:bg-white/20 transition-colors">
                       Ver GitHub
                     </div>
                   </div>
