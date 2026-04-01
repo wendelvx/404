@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Lenis from 'lenis';
 
 // --- IMPORTAÇÕES DE COMPONENTES ---
@@ -13,38 +13,80 @@ import PixelTrail from './components/PixelTrail';
 import GradientText from './components/GradientText';
 import CardSwap, { Card } from './components/CardSwap';
 
-// --- COMPONENTE TERMINAL NATIVO (Hacker Edition) ---
+// --- COMPONENTE TERMINAL NATIVO INTERATIVO ---
 const TerminalNative = () => {
-  const [logs, setLogs] = useState([]);
-  const lines = [
-    "[ OK ] Booting wendelvxOS kernel_v8.2...",
-    "[ OK ] Bypassing security protocols...",
-    "[INFO] Initializing neural network...",
-    "[ OK ] Decrypting architectural assets...",
-    "[INFO] Arsenal loaded successfully.",
-    "root@wendelvx:~$ access granted_"
-  ];
+  const [history, setHistory] = useState([
+    { type: 'system', text: 'wendelvxOS v8.2 - Acesso Concedido.' },
+    { type: 'system', text: 'Digite "help" para ver os comandos disponíveis.' }
+  ]);
+  const [input, setInput] = useState('');
+  const endRef = useRef(null);
 
+  // Auto-scroll para a última linha
   useEffect(() => {
-    let currentLine = 0;
-    const interval = setInterval(() => {
-      if (currentLine < lines.length) {
-        setLogs(prev => [...prev, lines[currentLine]]);
-        currentLine++;
-      } else {
-        clearInterval(interval);
+    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [history]);
+
+  const handleCommand = (e) => {
+    if (e.key === 'Enter') {
+      const cmd = input.trim().toLowerCase();
+      const newHistory = [...history, { type: 'user', text: `root@wendelvx:~$ ${input}` }];
+
+      switch (cmd) {
+        case 'help':
+          newHistory.push({ type: 'system', text: '> Comandos: about, skills, contact, clear' });
+          break;
+        case 'about':
+          newHistory.push({ type: 'system', text: '> Full Stack Architect focado em performance e sistemas distribuídos.' });
+          break;
+        case 'skills':
+          newHistory.push({ type: 'system', text: '> Stack: React, Node.js, TypeScript, PostgreSQL, Docker, AWS.' });
+          break;
+        case 'contact':
+          newHistory.push({ type: 'system', text: '> Redirecionando para o WhatsApp...' });
+          setTimeout(() => window.open('https://wa.me/5588988145310', '_blank'), 1000);
+          break;
+        case 'clear':
+          setHistory([]);
+          setInput('');
+          return;
+        case '':
+          break;
+        default:
+          newHistory.push({ type: 'error', text: `> Comando não encontrado: ${cmd}` });
       }
-    }, 500); 
-    return () => clearInterval(interval);
-  }, []);
+
+      setHistory(newHistory);
+      setInput('');
+    }
+  };
 
   return (
-    <div className="font-mono text-xs md:text-sm p-6 space-y-2 text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] tracking-wide">
-      {logs.map((line, i) => (
-        <p key={i} className={i === logs.length - 1 ? "animate-pulse text-white drop-shadow-[0_0_8px_rgba(255,255,255,1)]" : "opacity-90"}>
-          {line}
-        </p>
-      ))}
+    <div className="w-full h-full p-4 overflow-y-auto font-mono text-xs md:text-sm text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] tracking-wide pb-12" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      {/* Histórico */}
+      <div className="space-y-2">
+        {history.map((line, i) => (
+          <p key={i} className={`${line.type === 'error' ? 'text-red-400 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]' : line.type === 'user' ? 'text-white' : 'opacity-90'}`}>
+            {line.text}
+          </p>
+        ))}
+      </div>
+      
+      {/* Input Interativo */}
+      <div className="flex items-center gap-2 mt-2 text-white">
+        <span>root@wendelvx:~$</span>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleCommand}
+          className="flex-1 bg-transparent outline-none border-none text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] focus:ring-0 caret-[#00ff41]"
+          autoFocus
+          autoComplete="off"
+          spellCheck="false"
+        />
+      </div>
+      <div ref={endRef} />
     </div>
   );
 };
@@ -99,7 +141,7 @@ function App() {
       {/* 1. CAMADAS GLOBAIS */}
       {isDesktop && <SplashCursor />}
       
-      {/* BACKGROUND MANTIDO PARA TODAS AS TELAS (O Elegante ColorBends) */}
+      {/* BACKGROUND MANTIDO PARA TODAS AS TELAS */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-80">
         <ColorBends colors={["#ff5c7a", "#8a5cff", "#00ffd1"]} rotation={0} speed={0.2} scale={1} frequency={1} warpStrength={1} mouseInfluence={1} parallax={0.5} noise={0.1} transparent={true} />
       </div>
@@ -109,7 +151,7 @@ function App() {
         {/* --- SEÇÃO 01: HERO --- */}
         <section className="w-full min-h-screen flex flex-col lg:flex-row items-center justify-center p-6 gap-12 lg:gap-32 max-w-7xl mx-auto">
           
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0 z-10 w-full lg:w-auto flex-shrink-0">
+          <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left mt-20 lg:mt-0 z-10 w-full flex-shrink-0">
             <div className="w-full flex justify-center lg:justify-start">
               <FuzzyText baseIntensity={0.2} hoverIntensity={0.5} enableHover={isDesktop} color="#fff" fontSize="clamp(3rem, 10vw, 8rem)" fontWeight={900} className="uppercase leading-none">
                 WENDELVX
@@ -126,18 +168,20 @@ function App() {
             </div>
           </div>
 
-          <div className="z-20 relative w-full flex justify-center" translate="no">
-            {isDesktop ? (
-              /* COMPONENTE 3D ORIGINAL PARA DESKTOP */
-              <div className="scale-100">
+          <div className="flex-1 z-20 relative w-full flex justify-center lg:justify-end" translate="no">
+            {!isDesktop && <div className="absolute inset-0 z-50 touch-pan-y" style={{ touchAction: 'pan-y' }} />}
+            
+            <div className="scale-[0.85] md:scale-100 pointer-events-auto">
+              {isDesktop ? (
                 <ProfileCard
                   name="WendelVX"
                   title="Full Stack Engineer"
-                  handle="@wendelvx"
+                  handle="wendelvx"
                   status="Online"
                   contactText="Ver GitHub"
-                  image="/profile.webp" 
-                  avatarUrl="/profile.webp"
+                  avatarUrl="/profile.webp" // <-- CORREÇÃO: A imagem grande vai aqui
+                  miniAvatarUrl="/profile-pixel.webp" // <-- CORREÇÃO: A miniatura (avatar pequeno) vai aqui
+                  // iconUrl removido para não escurecer/cobrir o fundo de forma estranha
                   showUserInfo={true}
                   enableTilt={true}
                   enableMobileTilt={false}
@@ -146,35 +190,32 @@ function App() {
                   behindGlowEnabled={true}
                   innerGradient="linear-gradient(145deg, rgba(138, 92, 255, 0.2) 0%, rgba(0, 255, 209, 0.1) 100%)"
                 />
-              </div>
-            ) : (
-              /* CLONE CSS NATIVO PARA MOBILE: Visual idêntico, mas não bloqueia o scroll do dedo! */
-              <div 
-                className="relative w-full max-w-[320px] h-[400px] rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-6 group cursor-pointer" 
-                onClick={() => window.open('https://github.com/wendelvx', '_blank')}
-              >
-                {/* Imagem de Fundo cobrindo tudo */}
-                <img src="/profile.webp" className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Wendel" />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
-                
-                {/* Conteúdo do Card */}
-                <div className="relative z-10 flex flex-col items-start gap-2">
-                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400 mb-2 shadow-[0_0_15px_rgba(0,255,209,0.5)]">
-                    <img src="/profile.webp" className="w-full h-full object-cover" alt="Avatar" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-mono text-green-400 uppercase tracking-widest">Online</span>
-                  </div>
-                  <h2 className="text-3xl font-bold text-white">WendelVX</h2>
-                  <p className="text-cyan-400 font-mono text-sm">Full Stack Engineer</p>
+              ) : (
+                <div 
+                  className="relative w-full max-w-[320px] h-[400px] rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex flex-col justify-end p-6 group cursor-pointer" 
+                  onClick={() => window.open('https://github.com/wendelvx', '_blank')}
+                >
+                  <img src="/profile.webp" className="absolute inset-0 w-full h-full object-cover opacity-70" alt="Wendel" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
                   
-                  <div className="mt-4 w-full text-center py-3 bg-white/10 backdrop-blur-md rounded-xl font-bold text-white uppercase text-xs tracking-widest border border-white/10 active:bg-white/20 transition-colors">
-                    Ver GitHub
+                  <div className="relative z-10 flex flex-col items-start gap-2">
+                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400 mb-2 shadow-[0_0_15px_rgba(0,255,209,0.5)]">
+                      <img src="/profile-pixel.webp" className="w-full h-full object-cover" alt="Avatar Pixel" />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-xs font-mono text-green-400 uppercase tracking-widest">Online</span>
+                    </div>
+                    <h2 className="text-3xl font-bold text-white">WendelVX</h2>
+                    <p className="text-cyan-400 font-mono text-sm">Full Stack Engineer</p>
+                    
+                    <div className="mt-4 w-full text-center py-3 bg-white/10 backdrop-blur-md rounded-xl font-bold text-white uppercase text-xs tracking-widest border border-white/10 active:bg-white/20 transition-colors">
+                      Ver GitHub
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </section>
 
@@ -208,11 +249,9 @@ function App() {
                 <OrbitImages images={orbitTechLogos} shape="ellipse" radiusX={220} radiusY={90} rotation={-15} duration={30} itemSize={60} responsive={true} baseWidth={500} fill={true} showPath={true} pathColor="rgba(0, 255, 209, 0.2)" />
               </div>
             ) : (
-              /* ÓRBITA CSS NATIVA MOBILE: Resolve a "tela morta" com uma animação de giro CSS super leve */
               <div className="relative w-72 h-72 flex items-center justify-center">
                 <div className="absolute inset-0 border border-cyan-500/20 rounded-full pointer-events-none" />
                 <div className="absolute w-16 h-16 bg-cyan-500/20 border border-cyan-400 rounded-full shadow-[0_0_30px_rgba(0,255,209,0.5)] animate-pulse" />
-                
                 <div className="absolute inset-0 animate-[spin_20s_linear_infinite]">
                   {orbitTechLogos.map((logo, i) => {
                     const angle = (i * 360) / orbitTechLogos.length;
@@ -241,7 +280,6 @@ function App() {
 
           <div className="w-full flex justify-center">
             {isDesktop ? (
-              /* CARD SWAP NO DESKTOP: Mantido original */
               <div className="w-full max-w-[600px] h-[450px] relative px-4">
                 <CardSwap cardDistance={40} verticalDistance={50} delay={5000} pauseOnHover={true}>
                   {techCases.map((item) => (
@@ -261,7 +299,6 @@ function App() {
                 </CardSwap>
               </div>
             ) : (
-              /* SLIDER HORIZONTAL NATIVO MOBILE: Resolve o problema do overflow para a direita */
               <div className="flex w-full overflow-x-auto snap-x snap-mandatory px-6 gap-4 pb-8 hide-scrollbar" style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
                 {techCases.map((item) => (
                   <div key={item.id} className="snap-center shrink-0 w-[85vw] max-w-[320px] bg-zinc-900 border border-white/10 rounded-[2rem] p-8 flex flex-col justify-center items-center text-center shadow-xl relative overflow-hidden">
@@ -279,7 +316,7 @@ function App() {
           </div>
         </section>
 
-        {/* --- SEÇÃO 05: CTA & TERMINAL --- */}
+        {/* --- SEÇÃO 05: CTA & TERMINAL INTERATIVO --- */}
         <section className="w-full py-24 flex items-center justify-center relative overflow-hidden bg-transparent border-t border-purple-500/10">
           <div className="max-w-7xl w-full z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 p-8 md:p-16 mx-4 md:mx-6 border border-white/5 rounded-[2rem] md:rounded-[3rem]">
             
@@ -293,16 +330,17 @@ function App() {
                </button>
             </div>
 
-            <div className="h-[300px] relative rounded-2xl overflow-hidden border border-cyan-500/20 bg-zinc-950/80 backdrop-blur-md w-full shadow-[0_0_50px_rgba(0,255,209,0.05)]">
+            <div className="h-[300px] relative rounded-2xl overflow-hidden border border-cyan-500/20 bg-zinc-950/80 backdrop-blur-md w-full shadow-[0_0_50px_rgba(0,255,209,0.05)] cursor-text group">
                <div className="absolute top-0 left-0 w-full h-10 bg-white/5 border-b border-white/10 flex items-center px-4 gap-2 z-20">
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  <span className="ml-4 text-[10px] font-mono text-zinc-400 tracking-tighter">root@wendelvx:~# terminal_seguro</span>
+                  <span className="ml-4 text-[10px] font-mono text-zinc-400 tracking-tighter">root@wendelvx:~# session_active</span>
                </div>
-               <div className="w-full h-full pt-10 overflow-hidden bg-transparent relative">
+               
+               <div className="w-full h-full pt-10 relative">
                   <TerminalNative />
-                  <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-50" />
+                  <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] opacity-50 z-10" />
                </div>
             </div>
             
