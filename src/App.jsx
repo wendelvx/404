@@ -20,11 +20,16 @@ const TerminalNative = () => {
     { type: 'system', text: 'Digite "help" para ver os comandos disponíveis.' }
   ]);
   const [input, setInput] = useState('');
-  const endRef = useRef(null);
+  const terminalRef = useRef(null);
 
-  // Auto-scroll para a última linha
+  // Auto-scroll isolado APENAS para o terminal (não puxa a tela do site)
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (terminalRef.current) {
+      terminalRef.current.scrollTo({
+        top: terminalRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [history]);
 
   const handleCommand = (e) => {
@@ -62,7 +67,11 @@ const TerminalNative = () => {
   };
 
   return (
-    <div className="w-full h-full p-4 overflow-y-auto font-mono text-xs md:text-sm text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] tracking-wide pb-12" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+    <div 
+      ref={terminalRef} 
+      className="w-full h-full p-4 overflow-y-auto font-mono text-xs md:text-sm text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] tracking-wide pb-12" 
+      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+    >
       {/* Histórico */}
       <div className="space-y-2">
         {history.map((line, i) => (
@@ -81,12 +90,11 @@ const TerminalNative = () => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleCommand}
           className="flex-1 bg-transparent outline-none border-none text-[#00ff41] drop-shadow-[0_0_8px_rgba(0,255,65,0.8)] focus:ring-0 caret-[#00ff41]"
-          autoFocus
+          // autoFocus foi removido daqui para evitar que a página pule para o final no load
           autoComplete="off"
           spellCheck="false"
         />
       </div>
-      <div ref={endRef} />
     </div>
   );
 };
@@ -179,9 +187,8 @@ function App() {
                   handle="wendelvx"
                   status="Online"
                   contactText="Ver GitHub"
-                  avatarUrl="/profile.webp" // <-- CORREÇÃO: A imagem grande vai aqui
-                  miniAvatarUrl="/profile-pixel.webp" // <-- CORREÇÃO: A miniatura (avatar pequeno) vai aqui
-                  // iconUrl removido para não escurecer/cobrir o fundo de forma estranha
+                  avatarUrl="/profile.webp" 
+                  miniAvatarUrl="/profile-pixel.webp" 
                   showUserInfo={true}
                   enableTilt={true}
                   enableMobileTilt={false}
